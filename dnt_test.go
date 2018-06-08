@@ -66,3 +66,37 @@ func makeRequest(header http.Header) *http.Request {
 	r.Header = header
 	return r
 }
+
+func TestIsSet(t *testing.T) {
+	type args struct {
+		r *http.Request
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			"Dnt OptOut",
+			args{makeRequest(map[string][]string{"Dnt": []string{"1"}})},
+			true,
+		},
+		{
+			"Dnt OptIn",
+			args{makeRequest(map[string][]string{"Dnt": []string{"0"}})},
+			false,
+		},
+		{
+			"Dnt NotSet",
+			args{makeRequest(map[string][]string{"abc": []string{"0"}})},
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsSet(tt.args.r); got != tt.want {
+				t.Errorf("IsSet() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

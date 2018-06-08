@@ -35,6 +35,14 @@ func Request(r *http.Request) Option {
 	return NotSet
 }
 
+// IsSet returns true if a do not track option is set by the
+// browser in every other case it returns false
+// If you need more controll over the options you should use
+// the Request() function.
+func IsSet(r *http.Request) bool {
+	return Request(r) == OptOut
+}
+
 func mapDNT(i string) Option {
 	switch i {
 	case "0":
